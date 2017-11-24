@@ -3,6 +3,26 @@ let router = express.Router();
 let User = require('./../models/user');
 let sd = require('silly-datetime');
 
+router.post("/register", (req, res) => {
+  let userId = 100000000 + parseInt(Math.random() * 999999999)
+  let user = {
+    userId,
+    userName: req.body.userName,
+    userPwd: req.body.userPwd
+  }
+  User.create(user, (err, doc) => {
+    if (err) {
+      return res.json({
+        status: '1',
+        msg: '注册用户失败'
+      })
+    }
+    res.json({
+      status: '0',
+      msg: '用户注册成功'
+    })
+  })
+})
 //1.登录接口
 router.post("/login", (req,res,next) => {
   let param = {
@@ -265,6 +285,47 @@ router.post("/setDefault", (req,res,next) => {
     })
   });
 });
+// 添加收货地址
+router.post("/addAddress", (req, res) => {
+  // 在请求参数中，得到cookies中的userId
+  let { userId } = req.cookies
+  // 解构赋值得到请求参数中，body的添加的各项参数
+  let { userName, streetName, postCode, tel, isDefault } = req.body
+  // 通过一个方法设定一个独一无二的地址ID
+  let addressId = (new Date()).getTime() + parseInt(Math.random() * 9999) + parseInt(Math.random() * 9999)
+  // 检测某个用户，返回用户的文档
+  User.findOne({ userId }, (err, doc) => {
+    if (err) {
+      return res.json({
+        status: '1',
+        msg: err.message
+      })
+    }
+    // 向文档中添加一个数据
+    // doc是这个文档是查询用户返回的数据，添加数据后还需要通过save方法保存，才能成功添加到数据库
+    doc.addressList.push({
+      addressId,
+      userName,
+      streetName,
+      postCode,
+      tel,
+      isDefault
+    })
+    // .save把文档保存到数据库
+    doc.save((err, doc) => {
+      if (err) {
+        return res.json({
+          status: '1',
+          msg: err.message
+        })
+      }
+      res.json({
+        status: '0',
+        msg: '添加收货地址成功'
+      })
+    })
+  })
+})
 
 //11.删除地址接口
 router.post("/delAddress", (req,res,next) => {
