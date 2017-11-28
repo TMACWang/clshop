@@ -19,6 +19,7 @@ import { currency } from '@/util/currency'
 // 引入App组件
 import App from '@/App'
 
+import apiConfig from '../config/api.config'
 // 引入基础的CSS样式
 import '@/assets/css/base.css'
 // 引入结算的CSS样式
@@ -27,6 +28,8 @@ import '@/assets/css/checkout.css'
 import '@/assets/css/product.css'
 // 使用Axios库，实际上就是给vue的实例原型上面添加一个$http和axios属性
 Vue.use(VueAxios, axios)
+
+axios.defaults.baseURL = apiConfig.baseUrl
 // 使用无限滚动插件
 Vue.use(VueInfiniteScroll)
 // 使用懒加载插件，配置加载时的图片
@@ -34,6 +37,7 @@ Vue.use(VueLazyload, {
   loading: 'static/loading-svg/loading-bars.svg',
   attempt: 3
 })
+
 // 注册全局的过滤器currency
 Vue.filter('currency', currency)
 // 关闭产品提示，现在在开发环境中
@@ -46,39 +50,4 @@ new Vue({
   router, // 注入router选项，后面可以使用this.$route访问到路由对象，可以使用this.$router访问到路由器对象
   template: '<App/>', // 使用App组件作为根组件的子组件
   components: { App } // 注册App为根组件的子组件
-  // mounted () {
-  //   this.checkLogin()
-  //   this.getCartCount()
-  // },
-  // methods: {
-  //   // 检查是否登录
-  //   checkLogin () {
-  //     this.$http.get('users/checkLogin')
-  //     .then(res => {
-  //       res = res.data
-  //       // 如果能够返回用户的信息
-  //       if (res.status === 0) {
-  //         // 通过vuex修改一下用户的信息
-  //         this.$store.commit('updateUserInfo', res.result)
-  //       } else {
-  //         // 如果当前地址不在网站根目录，则跳转到网站根目录
-  //         if (this.$route.path !== '/') {
-  //           this.$router.push('/')
-  //         }
-  //       }
-  //     })
-  //   },
-  //   // 得到购物车中商品数量
-  //   getCartCount () {
-  //     this.$http.get('users/getCartCount')
-  //     .then(res => {
-  //       res = res.data
-  //       // 如果成功的获得购物车数量
-  //       if (res.status === 0) {
-  //         // 通过Vuex的mutation去修改state的值
-  //         this.$store.commit('updateCartCount', res.result)
-  //       }
-  //     })
-  //   }
-  // }
 })
