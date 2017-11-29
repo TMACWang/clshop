@@ -47,7 +47,7 @@
     <div class="md-modal modal-msg md-modal-transition" v-bind:class="{'md-show':loginModalFlag}">
       <div class="md-modal-inner">
         <div class="md-top">
-          <div class="md-title">登录</div>
+          <div class="md-title">登录llllll</div>
           <button class="md-close" @click="loginModalFlag=false">Close</button>
         </div>
         <div class="md-content">
